@@ -35,7 +35,7 @@
 
 **Files:**
 - Create: package.json, pnpm-lock.yaml, vite.config.ts, tsconfig.json
-- Create: index.html, src/main.ts, src/app/App.vue, src/app/App.spec.ts
+- Create: index.html, src/app/main.ts, src/app/App.vue, src/app/App.spec.ts
 - Create: src/app/providers/index.ts, src/entities/app-settings/model/store.ts, src/entities/app-settings/model/store.spec.ts
 - Create: src-tauri/Cargo.toml, src-tauri/src/lib.rs, src-tauri/src/main.rs, src-tauri/tauri.conf.json
 - Create: .gitignore, LICENSE, CONTENT-LICENSE, README.md
@@ -54,7 +54,7 @@
 
 **Files:**
 - Create: src/i18n/index.ts, src/locales/pt-BR/common.json, src/locales/en/common.json
-- Modify: src/main.ts, src/app/App.vue, src/entities/app-settings/model/store.ts
+- Modify: src/app/main.ts, src/app/App.vue, src/entities/app-settings/model/store.ts
 - Create: src/shared/i18n/i18n.spec.ts, src/app/App.locale.spec.ts
 
 **Interfaces:**

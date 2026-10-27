@@ -15,7 +15,8 @@ Use the newest stable, mutually compatible release of every direct dependency wh
 Version check on 2026-10-27: Tauri 2.12.5 is the latest stable Rust runtime; Tauri 3 is still alpha. The newest registry versions found for the planned dependencies were:
 
 - Tauri: Rust `tauri` 2.12.5, `tauri-build` 2.7.4, npm `@tauri-apps/api` 2.12.4 and `@tauri-apps/cli` 2.12.4; dialog plugin 2.8.3 and SQL plugin 2.6.0.
-- Frontend: Vue 3.5.44, Vite 8.3.5, TypeScript 7.0.2, Pinia 4.1.0, Vue I18n 11.4.16, Vitest 5.0.5, Vue Test Utils 2.5.1, and `@vitejs/plugin-vue` 6.0.10.
+- Frontend/tooling: Vue 3.5.44, Vite 8.3.5, TypeScript 6.0.3, Pinia 4.1.0, Vue I18n 11.4.16, Vitest 5.0.5, Vue Test Utils 2.5.1, `@vitejs/plugin-vue` 6.0.10, `vue-tsc` 3.3.13, jsdom 30.1.3, and `@types/node` 26.6.5. TypeScript 7.0.2 was the newest registry release but failed with the stable `vue-tsc` 3.3.13 because of a removed package export; TypeScript 6.0.3 is the newest compatible stable release used by this bootstrap.
+- Scaffold/package manager: `create-tauri-app` 4.8.0 and pnpm 12.15.0.
 - Other planned Rust crates: serde 1.0.229, serde_json 1.0.154, reqwest 0.13.5, tokio 1.54.1, and jsonschema 0.60.2.
 
 The Tauri 2.12.5 Rust crate requires at least Rust 1.90. This is a dated reference; recheck the latest stable versions and compatibility at implementation time, then record the selected versions and lockfiles.
