@@ -68,6 +68,8 @@ Concorrência, async, macros, CLI, web e Bevy ficam fora da trilha inicial e pod
 - A pessoa escolhe os arquivos que irão para cada análise e confirma o envio. O app exclui por padrão diretórios e arquivos gerados ou sensíveis, como target, .git e arquivos de ambiente.
 - O app envia código e resultados de verificações apenas depois da ação explícita; progresso e arquivos do exercício permanecem locais, salvo o contexto compartilhado para uma análise.
 - A arquitetura separa o provedor de IA do núcleo para permitir provedores adicionais no futuro. Só a integração OpenAI faz parte da primeira versão.
+- Na v1, se a conta não for elegível, a pessoa atingir os limites ou o serviço estiver indisponível, o app informa que a ajuda automatizada está indisponível; a pessoa ainda pode estudar e resolver os exercícios normalmente.
+- Provedores hospedados adicionais e modelos realmente locais são possibilidade futura. A troca de provedor será explícita e informará se o código sairá do dispositivo; não há fallback silencioso enviando código para outro serviço.
 - A disponibilidade da franquia depende do plano, elegibilidade e limites definidos pelo ChatGPT. A documentação atual descreve essa integração como prévia e lista recursos da API que não são suportados; a versão inicial deve manter as análises em texto e respostas em streaming, sem depender de ferramentas hospedadas não suportadas.
 
 ## Verificações locais e limites de execução
@@ -104,6 +106,7 @@ Para organização dos exercícios, foi considerada a agregação por etapa em u
 - É necessário ter Rust stable/Cargo instalado para gerar e verificar os projetos; o app orienta a instalação e detecta a ferramenta.
 - A integração de uso do plano ChatGPT para apps open source é uma dependência externa sujeita a elegibilidade, quotas, capacidades e alterações de política. O formato dos pacotes e o núcleo de aprendizagem devem continuar úteis sem IA.
 - A licença do app e dos pacotes autorais deve permitir uso, alteração e redistribuição open source; dependências e conteúdo de terceiros devem ser revisados separadamente.
+- Licença escolhida: MIT para o código do app e CC BY 4.0 para as lições autorais. Contribuições de conteúdo precisam declarar autoria ou autorização para distribuição sob CC BY 4.0; fontes e materiais de terceiros serão referenciados, não copiados sem licença compatível.
 
 ## Critérios de sucesso
 
@@ -122,11 +125,6 @@ Para organização dos exercícios, foi considerada a agregação por etapa em u
 - Armazenamento local do progresso e histórico opcional de revisões.
 - Segurança técnica da execução de Cargo e proteção dos tokens OAuth, de acordo com as APIs documentadas no momento do desenvolvimento.
 - Processo de autoria, revisão e publicação de pacotes comunitários.
-
-## Decisões pendentes da pessoa autora
-
-- Comportamento quando o login com ChatGPT não estiver disponível ou a pessoa não for elegível: sem IA na v1 ou chave de API como alternativa.
-- Licença do código e licença do conteúdo educacional autoral.
 
 ## Referências verificadas
 
