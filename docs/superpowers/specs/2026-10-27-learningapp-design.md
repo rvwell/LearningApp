@@ -1,7 +1,7 @@
 # LearningApp: especificação de produto e design
 
 **Data:** 2026-10-27  
-**Status:** Rascunho para aprovação  
+**Status:** Aprovado para planejamento em 2026-10-27  
 **Escopo:** produto e arquitetura de alto nível; não autoriza implementação
 
 ## Intenção
@@ -140,3 +140,4 @@ Para organização dos exercícios, foi considerada a agregação por etapa em u
 - Rust getting started: https://rust-lang.org/learn/get-started/
 - Rust Book: https://doc.rust-lang.org/book/
 - Cargo Book: https://doc.rust-lang.org/stable/cargo/guide/
+
