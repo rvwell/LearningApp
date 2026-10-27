@@ -19,6 +19,7 @@
 - If the plan is ineligible, exhausted, or unavailable, AI help stops and the learner can continue offline.
 - The initial request uses eligible Responses API text input with store disabled and streaming enabled, subject to current documented limitations.
 - Community checks are data declarations; no shell scripts or AI-authored commands are accepted.
+- The v1 Rust checks are cargo +stable check and cargo +stable test; commands time out after 120 seconds and combined stdout/stderr is capped at 1 MiB.
 - Credential material is stored using Windows secure storage and is never logged.
 - Other providers and truly local models are future opt-in adapters; no silent provider switch sends code elsewhere.
 
@@ -45,9 +46,9 @@
 - Run executable plus argv directly with std::process::Command; never invoke cmd.exe, PowerShell, bash, or a shell string.
 - Project path must resolve under the selected workspace; the user confirms checks from community packs before first execution.
 
-- [ ] Step 1: Write runner tests for cargo check success/failure, output capture, cancellation, unknown check, and project path outside workspace.
+- [ ] Step 1: Write runner tests for cargo +stable check and cargo +stable test success/failure, output capture, 120-second timeout, 1 MiB output cap, cancellation, unknown check, and project path outside workspace.
 - [ ] Step 2: Run cargo test --manifest-path src-tauri/Cargo.toml checks and confirm the tests fail.
-- [ ] Step 3: Implement the allowlisted process runner with timeout, output-size limit, and bounded execution directory.
+- [ ] Step 3: Implement the direct executable/argv process runner with a 120-second timeout, 1 MiB combined output cap, and bounded execution directory.
 - [ ] Step 4: Run cargo test --manifest-path src-tauri/Cargo.toml checks; confirm commands execute only the declared executable and argv.
 - [ ] Step 5: Commit as feat: run declared local checks.
 
@@ -61,9 +62,9 @@
 **Interfaces:**
 - Types: ReviewContext { files: Vec<ReviewFile>, checks: Vec<CheckResult> }; ReviewFile { relative_path, content }.
 - Function: build_review_context(project_root: &Path, selected_paths: &[PathBuf], checks: &[CheckResult]) -> Result<ReviewContext, ContextError>.
-- Exclusions: target, .git, .env variants, binary files, files outside project root, and files above the documented per-file/total size caps.
+- Exclusions: target, .git, .env variants, binary files, files outside project root, files over 256 KiB, and contexts over 1 MiB total.
 
-- [ ] Step 1: Write context tests for explicit included files, default sensitive-file exclusions, binary/oversize rejection, symlink escape, and root path checks.
+- [ ] Step 1: Write context tests for explicit included files, default sensitive-file exclusions, binary rejection, a 256 KiB per-file cap, a 1 MiB total context cap, symlink escape, and root path checks.
 - [ ] Step 2: Run cargo test --manifest-path src-tauri/Cargo.toml review::context and confirm tests fail.
 - [ ] Step 3: Implement context construction and a frontend preview with file names and check output.
 - [ ] Step 4: Add cancel test asserting no provider call occurs when the learner closes the preview.

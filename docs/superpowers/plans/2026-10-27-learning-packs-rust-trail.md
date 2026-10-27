@@ -4,7 +4,7 @@
 
 **Goal:** Load community trail packages, show the initial Rust course in pt-BR, create an independent Cargo project per exercise and mini project, and save local progress.
 
-**Architecture:** Trail packages are data-only manifests, Markdown lessons, and starter files. A validated package declares its programming language, course-content locale, project template, allowed checks, and resource paths. The app core does not assume Cargo; v1 bundles a Rust project adapter and accepts future language packages through the same package boundary.
+**Architecture:** Trail packages are data-only manifests, Markdown lessons, and starter files. A validated package declares its programming language, course-content locale, project template, allowed checks, and resource paths. The app core does not assume Cargo; a generic template adapter supports data-only packages for additional languages, while the Rust adapter uses Cargo stable for Rust projects.
 
 **Tech Stack:** Rust serde/serde_json for package manifests, JSON Schema for the public package format, Markdown rendering in React, Tauri 2 file and path APIs, SQLite through the Tauri SQL plugin for progress.
 
@@ -22,7 +22,7 @@
 
 ## Review Focus
 
-- Malformed or oversized package manifests are rejected before import; test schema, file-count, and size limits.
+- Malformed or oversized package manifests are rejected before import; enforce a 50 MiB ZIP limit, 200 MiB expanded limit, 2,000-file limit, and 5 MiB per starter file.
 - ZIP entries cannot escape the chosen import directory; test traversal, absolute paths, and duplicate normalized paths.
 - A destination collision preserves all existing bytes; test create-project collision behavior.
 - Unsupported UI locale does not hide a pt-BR-only lesson; test independent app locale and content locale.
@@ -63,7 +63,7 @@
 - Supported sources: a folder or .zip file selected by the user.
 - Consumes: Task 1 ValidatedTrail and schema.
 
-- [ ] Step 1: Write import tests for valid folder and ZIP, duplicate pack ID, traversal path, corrupt ZIP, and user cancellation.
+- [ ] Step 1: Write import tests for valid folder and ZIP, duplicate pack ID, traversal path, corrupt ZIP, user cancellation, 50 MiB compressed limit, 200 MiB expanded limit, 2,000-file limit, and 5 MiB per-file limit.
 - [ ] Step 2: Run cargo test --manifest-path src-tauri/Cargo.toml packs::import and confirm tests fail.
 - [ ] Step 3: Implement import into app data only after full validation; reject executable hooks and shell scripts from packages.
 - [ ] Step 4: Add UI to select a source and show validation errors before the pack is installed.
@@ -79,15 +79,15 @@
 - Create: src-tauri/tests/projects/generate_rust.rs, src-tauri/tests/projects/collision.rs
 
 **Interfaces:**
-- Trait: LanguageAdapter { detect_toolchain() -> ToolchainStatus; create_project(template: &ProjectTemplate, destination: &Path) -> Result<PathBuf, ProjectError> }.
-- V1 adapter: RustAdapter; requires rustup stable and Cargo; initializes a binary project with Cargo stable and copies validated lesson files.
+- Trait: ProjectAdapter { supports(language_id: &str) -> bool; detect_toolchain() -> ToolchainStatus; create_project(template: &ProjectTemplate, destination: &Path) -> Result<PathBuf, ProjectError> }.
+- V1 adapters: TemplateAdapter creates a project by copying validated starter files for any declared language; RustAdapter requires rustup stable and Cargo, initializes a binary project with Cargo stable, then copies validated lesson files.
 - Command: create_exercise_project(pack_id: String, exercise_id: String, parent: PathBuf) -> Result<ProjectCreationResult, ProjectError>.
 - On collision, return DestinationExists without modifying the target.
 
 - [ ] Step 1: Write generation tests asserting each exercise produces a Cargo.toml and src/main.rs that cargo metadata can load.
 - [ ] Step 2: Write collision test asserting an existing marker file retains identical bytes after a failed create request.
 - [ ] Step 3: Run cargo test --manifest-path src-tauri/Cargo.toml projects and confirm tests fail.
-- [ ] Step 4: Implement stable Cargo discovery, project initialization, template copy, and safe path containment.
+- [ ] Step 4: Implement adapter selection, stable Cargo discovery, Rust project initialization, generic template copy, and safe path containment.
 - [ ] Step 5: Run cargo test --manifest-path src-tauri/Cargo.toml projects; also run cargo metadata for a generated fixture.
 - [ ] Step 6: Commit as feat: create independent exercise projects.
 
@@ -113,7 +113,8 @@
 
 **Files:**
 - Create: content/trails/rust-pt-BR/trail.json
-- Create: content/trails/rust-pt-BR/stages/01-start and stages/02-fundamentals through stages/05-serialization lesson and exercise files
+- Create stage directories: 01-start, 02-fundamentals, 03-essential-rust, 04-larger-programs, 05-serialization
+- In each stage directory create stage.json, lesson.md, exercises/01, exercises/02, exercises/03, and milestone/project.json with the starter files referenced by each manifest.
 - Create: content/trails/rust-pt-BR/LICENSE
 
 **Interfaces:**
@@ -125,5 +126,5 @@
 - [ ] Step 1: Add content review checklist asserting all 15+ exercises have unique IDs, a stated learning goal, and at least one checkable outcome.
 - [ ] Step 2: Run the pack validator against the complete Rust pack and confirm any missing exercise field is reported.
 - [ ] Step 3: Write original pt-BR explanations and exercise prompts using official Rust documentation as references; do not copy roadmap.sh wording or graph structures.
-- [ ] Step 4: Validate all starter projects with stable cargo check and cargo test.
+- [ ] Step 4: Validate all Rust starter projects with cargo +stable check and cargo +stable test.
 - [ ] Step 5: Commit as content: add initial Rust learning trail.

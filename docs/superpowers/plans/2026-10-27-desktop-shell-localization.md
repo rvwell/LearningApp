@@ -58,10 +58,10 @@
 - Produces: AppLocale = pt-BR | en; initializeI18n(initialLocale: AppLocale); translation namespaces for common shell copy.
 - Consumes: Task 1 React and test setup.
 
-- [ ] Step 1: Write tests named resolvesSupportedLocale and changesAllShellLabels; assert unsupported locale falls back to pt-BR and changing locale updates all shell labels.
+- [ ] Step 1: Write tests named detectsSystemLocale, manualLocaleOverridesSystem, resolvesUnsupportedLocale, and changesAllShellLabels; assert en-US resolves to en, pt-BR remains pt-BR, unsupported locales fall back to pt-BR, a saved choice overrides system detection, and changing locale updates all shell labels.
 - [ ] Step 2: Run pnpm test --run src/i18n/i18n.test.ts src/app/App.locale.test.tsx and confirm the tests fail.
 - [ ] Step 3: Implement the bundled translation catalogs and react-i18next setup with language codes pt-BR and en.
-- [ ] Step 4: Run the two localization tests and pnpm test --run; confirm all UI labels use keys and both catalogs cover the same required keys.
+- [ ] Step 4: Run the localization tests and pnpm test --run; confirm all UI labels use keys and both catalogs cover the same required keys.
 - [ ] Step 5: Commit as feat: localize desktop shell.
 
 ### Task 3: Persist locale and select a workspace folder
@@ -74,9 +74,9 @@
 - Create: matching Rust and React tests.
 
 **Interfaces:**
-- Rust types: AppLocale { PtBr, En }; AppSettings { locale: AppLocale, workspace_root: Option<PathBuf> }.
-- Rust commands: get_app_settings() -> Result<AppSettings, AppError>; update_app_settings(settings: AppSettings) -> Result<AppSettings, AppError>; select_workspace_directory() -> Result<Option<PathBuf>, AppError>.
-- Frontend wrappers: settingsApi.get(), settingsApi.update(settings), workspaceApi.selectDirectory().
+- Rust types: AppLocale { PtBr, En } serialized as pt-BR or en; AppSettingsDto { locale: AppLocale, workspace_root: Option<String> }.
+- Rust commands: get_app_settings() -> Result<AppSettingsDto, AppError>; update_app_settings(settings: AppSettingsDto) -> Result<AppSettingsDto, AppError>; select_workspace_directory() -> Result<Option<String>, AppError>.
+- Frontend wrappers: settingsApi.get(): Promise<AppSettingsDto>, settingsApi.update(settings: AppSettingsDto): Promise<AppSettingsDto>, workspaceApi.selectDirectory(): Promise<string | null>.
 - Consumes: Task 2 localization and Task 1 Tauri commands.
 
 - [ ] Step 1: Write settings tests for defaults, persistence round-trip, corrupt-file recovery, and non-ASCII workspace paths.
@@ -96,6 +96,6 @@
 - Produces: a release workflow that builds the Windows installer and verifies the frontend and Rust test suites.
 - Consumes: Tasks 1–3.
 
-- [ ] Step 1: Add workflow configuration and a documented local release command.
-- [ ] Step 2: Run pnpm test --run, cargo test --manifest-path src-tauri/Cargo.toml, and pnpm tauri build on Windows; confirm a Windows installer artifact is produced.
+- [ ] Step 1: Configure the Tauri NSIS setup executable and document the local release command.
+- [ ] Step 2: Run pnpm test --run, cargo test --manifest-path src-tauri/Cargo.toml, and pnpm tauri build on Windows; confirm a Windows setup executable is produced.
 - [ ] Step 3: Commit as build: add Windows installer workflow.
