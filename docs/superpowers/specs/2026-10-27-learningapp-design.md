@@ -4,6 +4,13 @@
 **Status:** Aprovado para planejamento em 2026-10-27  
 **Escopo:** produto e arquitetura de alto nível; não autoriza implementação
 
+## Decisões de arquitetura
+
+- O frontend usará Vue 3, TypeScript, Vite, Pinia e Vue I18n dentro do Tauri.
+- O frontend seguirá Feature-Sliced Design (FSD), com camadas `app`, `pages`, `widgets`, `features`, `entities` e `shared`; imports respeitam a direção entre camadas e slices do mesmo nível não dependem diretamente uns dos outros. O backend Rust será organizado por domínio.
+- A implementação usará a versão estável mais recente e compatível de cada dependência direta no início do desenvolvimento, incluindo crates e plugins. Versões prerelease ficam de fora; os lockfiles registrarão o conjunto exato resolvido. Tauri ficará na linha estável mais recente, sem adotar uma major ainda em alpha/beta/RC.
+- A versão específica de cada pacote será verificada novamente quando a implementação começar, pois versões “mais recentes” mudam com o tempo.
+
 ## Intenção
 
 Criar um app desktop para Windows que ajude iniciantes a aprender programação por trilhas estruturadas. O app mostra explicações e exercícios, cria projetos reais com Cargo em uma pasta escolhida pela pessoa e permite pedir a uma IA para revisar o trabalho. O código é escrito em outro editor. O app não é uma IDE.
@@ -122,7 +129,6 @@ Para organização dos exercícios, foi considerada a agregação por etapa em u
 
 ## Decisões deixadas para a implementação
 
-- Framework e arquitetura interna do app desktop para Windows.
 - Esquema e validador de pacotes, inclusive versionamento e instalação de trilhas.
 - Experiência visual da trilha, progresso, seleção de arquivos e revisão.
 - Armazenamento local do progresso e histórico opcional de revisões.

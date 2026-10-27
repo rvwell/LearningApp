@@ -6,9 +6,11 @@
 
 **Architecture:** Trail packages are data-only manifests, Markdown lessons, and starter files. A validated package declares its programming language, course-content locale, project template, allowed checks, and resource paths. The app core does not assume Cargo; a generic template adapter supports data-only packages for additional languages, while the Rust adapter uses Cargo stable for Rust projects.
 
-**Tech Stack:** Rust serde/serde_json for package manifests, JSON Schema for the public package format, Markdown rendering in React, Tauri 2 file and path APIs, SQLite through the Tauri SQL plugin for progress.
+**Tech Stack:** Rust serde/serde_json for package manifests, JSON Schema for the public package format, Vue 3 + TypeScript + Vite, Pinia for client-side learning state, Vue I18n for UI strings, Markdown rendering in Vue, Tauri 2 file and path APIs, SQLite through the Tauri SQL plugin for durable progress.
 
 **Spec:** docs/superpowers/specs/2026-10-27-learningapp-design.md
+
+**Frontend structure:** Follow the FSD layer and import rules in docs/superpowers/plans/README.md. Trail and exercise models live in `entities`; importing a pack and marking an exercise complete are separate `features`; the trail learning flow belongs to `pages/trail`; reusable lesson and exercise summaries belong to `widgets`; Tauri IPC clients and generic utilities belong to `shared`. Keep Rust modules organized by domain.
 
 ## Global Constraints
 
@@ -54,7 +56,7 @@
 
 **Files:**
 - Create: src-tauri/src/packs/import.rs, src-tauri/src/commands/packs.rs
-- Create: src/features/trails/ImportTrailButton.tsx, src/features/trails/TrailImportDialog.tsx
+- Create: src/features/import-trail/ui/ImportTrailButton.vue, src/features/import-trail/ui/TrailImportDialog.vue
 - Create: src-tauri/tests/packs/import_folder.rs, src-tauri/tests/packs/import_zip.rs
 - Modify: src-tauri/src/lib.rs, src-tauri/capabilities/default.json
 
@@ -67,7 +69,7 @@
 - [ ] Step 2: Run cargo test --manifest-path src-tauri/Cargo.toml packs::import and confirm tests fail.
 - [ ] Step 3: Implement import into app data only after full validation; reject executable hooks and shell scripts from packages.
 - [ ] Step 4: Add UI to select a source and show validation errors before the pack is installed.
-- [ ] Step 5: Run pack import tests and pnpm test --run src/features/trails; confirm invalid packages are never partially installed.
+- [ ] Step 5: Run pack import tests and pnpm test --run src/features/import-trail; confirm invalid packages are never partially installed.
 - [ ] Step 6: Commit as feat: import local learning packs.
 
 ### Task 3: Generate independent projects through language adapters
@@ -94,17 +96,20 @@
 ### Task 4: Store local progress and expose lesson/project flow
 
 **Files:**
-- Create: src/features/learning/TrailView.tsx, StageView.tsx, LessonView.tsx, ExerciseCard.tsx
+- Create: src/pages/trail/ui/TrailPage.vue, src/pages/trail/model/store.ts, src/pages/trail/model/store.spec.ts
+- Create: src/widgets/stage-navigation/ui/StageNavigation.vue, src/widgets/lesson-content/ui/LessonContent.vue, src/widgets/exercise-card/ui/ExerciseCard.vue
+- Create: src/entities/trail/model/types.ts, src/entities/exercise/model/types.ts, src/features/complete-exercise/ui/CompleteExerciseButton.vue
 - Create: src-tauri/src/progress/model.rs, src-tauri/src/progress/repository.rs, src-tauri/src/commands/progress.rs
 - Create: src-tauri/migrations/001_progress.sql
-- Create: React and Rust tests for lesson-language display, stage completion, and progress persistence.
+- Create: Vue and Rust tests for lesson-language display, stage completion, and progress persistence.
 
 **Interfaces:**
 - Rust commands: get_progress(pack_id: String) -> Result<TrailProgress, AppError>; set_exercise_status(pack_id: String, exercise_id: String, status: ExerciseStatus) -> Result<TrailProgress, AppError>.
+- The Pinia store in `pages/trail/model` holds the currently selected trail, stage, and exercise view state; Rust/SQLite remains the source of truth for persisted progress. The `complete-exercise` feature calls the progress API through a lower-layer entity/shared API.
 - Consumes: Tasks 1–3 and shell settings/workspace APIs from the Desktop Shell plan.
 
 - [ ] Step 1: Write tests that save and reload progress and render a pt-BR lesson while the app shell is set to English.
-- [ ] Step 2: Run the new targeted Rust and React tests and confirm they fail.
+- [ ] Step 2: Run the new targeted Rust and Vue tests and confirm they fail.
 - [ ] Step 3: Implement SQLite migrations and progress commands, then connect the course UI.
 - [ ] Step 4: Run all relevant tests; confirm reopening the app preserves progress and changing the UI locale leaves lesson text unchanged.
 - [ ] Step 5: Commit as feat: add learning flow and progress.

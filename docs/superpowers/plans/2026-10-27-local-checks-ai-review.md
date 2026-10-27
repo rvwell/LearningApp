@@ -6,9 +6,11 @@
 
 **Architecture:** The Tauri Rust backend owns process execution, OAuth credentials, safe file reading, and the Responses API client. The frontend requests analysis only from the explicit Analyze Exercise action, previews the exact context, and renders a streamed review. The first provider uses the official Sign in with ChatGPT flow for eligible open-source apps; alternate hosted and local providers are future work.
 
-**Tech Stack:** Tauri 2 Rust commands, std::process::Command with argv and no shell, reqwest, serde, official Sign in with ChatGPT OAuth flow, Windows Credential Manager, React and TypeScript.
+**Tech Stack:** Tauri 2 Rust commands, std::process::Command with argv and no shell, reqwest, serde, official Sign in with ChatGPT OAuth flow, Windows Credential Manager, Vue 3 + TypeScript + Vite, Pinia, Vue I18n, Vitest, and Vue Test Utils.
 
 **Spec:** docs/superpowers/specs/2026-10-27-learningapp-design.md
+
+**Frontend structure:** Follow the FSD layer and import rules in docs/superpowers/plans/README.md. Exercise types come from `entities/exercise`; starting a review and preparing its approved context are separate feature slices; the exercise route remains in `pages/trail`; provider settings are in `pages/settings`; Tauri IPC clients are in `shared/api`. Review state stays inside its feature model and never adds file-write capabilities.
 
 ## Global Constraints
 
@@ -56,7 +58,7 @@
 
 **Files:**
 - Create: src-tauri/src/review/context.rs, src-tauri/src/commands/review_context.rs
-- Create: src/features/review/ReviewContextDialog.tsx, src/features/review/ReviewContextDialog.test.tsx
+- Create: src/features/prepare-review/ui/ReviewContextDialog.vue, src/features/prepare-review/model/store.ts, src/features/prepare-review/model/store.spec.ts
 - Create: src-tauri/tests/review/context.rs
 
 **Interfaces:**
@@ -68,14 +70,14 @@
 - [ ] Step 2: Run cargo test --manifest-path src-tauri/Cargo.toml review::context and confirm tests fail.
 - [ ] Step 3: Implement context construction and a frontend preview with file names and check output.
 - [ ] Step 4: Add cancel test asserting no provider call occurs when the learner closes the preview.
-- [ ] Step 5: Run targeted Rust and React tests; confirm the exact preview selection is the submitted context.
+- [ ] Step 5: Run targeted Rust and Vue tests; confirm the exact preview selection is the submitted context.
 - [ ] Step 6: Commit as feat: preview code before AI review.
 
 ### Task 3: Add ChatGPT sign-in and secure token storage
 
 **Files:**
 - Create: src-tauri/src/providers/openai/oauth.rs, token_store.rs, auth_commands.rs
-- Create: src/features/settings/ProviderSettings.tsx
+- Create: src/pages/settings/ui/ProviderSettings.vue
 - Create: src-tauri/tests/providers/openai/oauth.rs, token_store.rs
 - Modify: src-tauri/Cargo.toml, src-tauri/src/lib.rs
 
@@ -111,16 +113,18 @@
 ### Task 5: Render review results without write capabilities
 
 **Files:**
-- Create: src/features/review/AnalyzeExerciseButton.tsx, ReviewProgress.tsx, ReviewResult.tsx
-- Create: src/features/review/ReviewFlow.test.tsx
-- Modify: src/features/learning/ExerciseCard.tsx, src-tauri/capabilities/default.json
+- Create: src/features/analyze-exercise/ui/AnalyzeExerciseButton.vue, ReviewProgress.vue, ReviewResult.vue
+- Create: src/features/analyze-exercise/model/store.ts, src/features/analyze-exercise/model/ReviewFlow.spec.ts
+- Create: src/widgets/exercise-actions/ui/ExerciseActions.vue to compose the `complete-exercise` and `analyze-exercise` features.
+- Modify: src/pages/trail/ui/TrailPage.vue, src-tauri/capabilities/default.json
 
 **Interfaces:**
 - Frontend flow: select check set, run checks, preview approved context, confirm send, render stream, show completed result or recoverable error.
+- The Pinia store in `features/analyze-exercise/model` holds transient flow and streaming state; the Rust backend owns provider credentials and performs file reads and network requests.
 - No file-write IPC command is exposed to the review feature.
 
 - [ ] Step 1: Write UI tests for button-triggered review, user cancel, streaming states, completed suggestions, quota exhaustion, and no-AI offline continuation.
-- [ ] Step 2: Run pnpm test --run src/features/review/ReviewFlow.test.tsx and confirm tests fail.
+- [ ] Step 2: Run pnpm test --run src/features/analyze-exercise/model/ReviewFlow.spec.ts and confirm tests fail.
 - [ ] Step 3: Connect UI to the checks, context, OAuth, and provider APIs.
 - [ ] Step 4: Run all Rust and frontend tests; manually verify the review path never changes exercise files.
 - [ ] Step 5: Commit as feat: add safe exercise review flow.
