@@ -57,7 +57,7 @@ Concorrência, async, macros, CLI, web e Bevy ficam fora da trilha inicial e pod
 
 - A aplicação consumirá pacotes de trilha versionados, em formato aberto a ser definido na implementação. Um pacote contém metadados, etapas, lições em Markdown, exercícios, projetos, verificações permitidas e referências.
 - Cada exercício descreve objetivo, contexto, arquivos gerados, critérios de conclusão, comandos locais permitidos e links de aprofundamento.
-- A comunidade poderá criar novos pacotes sem alterar o núcleo do app. A primeira versão inclui a trilha Rust oficial do app.
+- A comunidade poderá criar novos pacotes sem alterar o núcleo do app. Na v1, a pessoa poderá importar pacotes a partir de uma pasta ou arquivo local; um catálogo remoto fica para depois. A primeira versão inclui a trilha Rust oficial do app.
 - As lições serão escritas originalmente em português. Usar documentação como fonte de estudo é permitido dentro do processo editorial; o pacote distribui apenas texto autoral e links para as fontes.
 - roadmap.sh servirá como referência de pesquisa e poderá aparecer como link externo. Não baixar, raspar, copiar, traduzir, adaptar ou incluir conteúdo ou estruturas do site/repositório sem permissão escrita compatível com redistribuição.
 
@@ -75,6 +75,7 @@ Concorrência, async, macros, CLI, web e Bevy ficam fora da trilha inicial e pod
 - O app só executa verificações depois que a pessoa clica em “Analisar exercício”.
 - Cada pacote declara verificações locais específicas. Para a trilha Rust inicial, o conjunto base é cargo check e cargo test.
 - O app mostra os comandos e a pasta de execução. Conteúdo de trilha de terceiros exige confirmação antes de executar verificações pela primeira vez.
+- Se o caminho de destino já contiver um projeto, o app nunca o sobrescreve; pede à pessoa para escolher outro nome ou ignorar a criação.
 - Não há execução de comandos inventados ou selecionados pela IA, shell genérico, execução em background ou escrita de arquivos pela IA.
 - O app envia para a análise a saída das verificações selecionadas junto com os arquivos que a pessoa aprovou.
 
@@ -98,7 +99,7 @@ Para organização dos exercícios, foi considerada a agregação por etapa em u
 
 ## Restrições e premissas
 
-- Primeira plataforma: Windows. macOS e Linux ficam para depois.
+- Primeira plataforma: Windows 10/11 x64, distribuído por instalador. macOS e Linux ficam para depois.
 - Rust é a única trilha oficial incluída na versão inicial.
 - É necessário ter Rust stable/Cargo instalado para gerar e verificar os projetos; o app orienta a instalação e detecta a ferramenta.
 - A integração de uso do plano ChatGPT para apps open source é uma dependência externa sujeita a elegibilidade, quotas, capacidades e alterações de política. O formato dos pacotes e o núcleo de aprendizagem devem continuar úteis sem IA.
@@ -121,6 +122,11 @@ Para organização dos exercícios, foi considerada a agregação por etapa em u
 - Armazenamento local do progresso e histórico opcional de revisões.
 - Segurança técnica da execução de Cargo e proteção dos tokens OAuth, de acordo com as APIs documentadas no momento do desenvolvimento.
 - Processo de autoria, revisão e publicação de pacotes comunitários.
+
+## Decisões pendentes da pessoa autora
+
+- Comportamento quando o login com ChatGPT não estiver disponível ou a pessoa não for elegível: sem IA na v1 ou chave de API como alternativa.
+- Licença do código e licença do conteúdo educacional autoral.
 
 ## Referências verificadas
 
