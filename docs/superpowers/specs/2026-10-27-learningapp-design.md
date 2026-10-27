@@ -8,7 +8,7 @@
 
 Criar um app desktop para Windows que ajude iniciantes a aprender programação por trilhas estruturadas. O app mostra explicações e exercícios, cria projetos reais com Cargo em uma pasta escolhida pela pessoa e permite pedir a uma IA para revisar o trabalho. O código é escrito em outro editor. O app não é uma IDE.
 
-A primeira trilha será de Rust para quem começa do zero. O app e as trilhas serão open source, com conteúdo criado pela comunidade e possibilidade de adicionar linguagens e trilhas no futuro.
+A primeira trilha será de Rust para quem começa do zero e será escrita em português do Brasil. A interface do app terá suporte a português do Brasil e inglês desde a v1. O app e as trilhas serão open source, com pacotes comunitários para incluir outras linguagens de programação no futuro.
 
 ## Objetivos
 
@@ -18,7 +18,7 @@ A primeira trilha será de Rust para quem começa do zero. O app e as trilhas se
 - Permitir que a pessoa peça uma revisão explícita pelo botão “Analisar exercício”.
 - Executar verificações locais autorizadas para aquele exercício e incluir seus resultados na análise.
 - Usar IA para explicar problemas e sugerir melhorias, sem alterar arquivos.
-- Permitir trilhas locais mantidas pela comunidade, incluindo novas linguagens e trilhas de aprofundamento.
+- Permitir trilhas locais mantidas pela comunidade para várias linguagens de programação e trilhas de aprofundamento.
 
 ## Não objetivos
 
@@ -30,10 +30,10 @@ A primeira trilha será de Rust para quem começa do zero. O app e as trilhas se
 
 ## Usuários e fluxo principal
 
-O público inicial são iniciantes sem experiência prévia em programação. A interface e o conteúdo iniciais serão em português do Brasil.
+O público inicial são iniciantes sem experiência prévia em programação. A interface estará disponível em português do Brasil e inglês desde a v1; o conteúdo completo da primeira trilha estará disponível em português do Brasil. Trocar o idioma da interface não implica traduzir automaticamente o conteúdo de uma trilha.
 
-1. A pessoa instala o app, escolhe a trilha Rust e indica uma pasta local.
-2. O app explica como instalar Rust estável usando rustup e verifica quando Cargo está disponível; não instala ferramentas silenciosamente.
+1. A pessoa instala o app, escolhe uma trilha e indica uma pasta local.
+2. O app apresenta os requisitos de linguagem e ferramentas do pacote selecionado. Na trilha Rust, explica como instalar Rust estável usando rustup e verifica quando Cargo está disponível; não instala ferramentas silenciosamente.
 3. A pessoa abre uma etapa, lê a explicação, vê o exercício e usa seu editor habitual.
 4. Cada exercício ou mini projeto tem sua própria pasta e Cargo.toml, criados com Cargo stable.
 5. Ao clicar em “Analisar exercício”, o app mostra os arquivos que pretende compartilhar, executa as verificações declaradas para o exercício e apresenta o resultado local.
@@ -57,8 +57,10 @@ Concorrência, async, macros, CLI, web e Bevy ficam fora da trilha inicial e pod
 
 - A aplicação consumirá pacotes de trilha versionados, em formato aberto a ser definido na implementação. Um pacote contém metadados, etapas, lições em Markdown, exercícios, projetos, verificações permitidas e referências.
 - Cada exercício descreve objetivo, contexto, arquivos gerados, critérios de conclusão, comandos locais permitidos e links de aprofundamento.
-- A comunidade poderá criar novos pacotes sem alterar o núcleo do app. Na v1, a pessoa poderá importar pacotes a partir de uma pasta ou arquivo local; um catálogo remoto fica para depois. A primeira versão inclui a trilha Rust oficial do app.
-- As lições serão escritas originalmente em português. Usar documentação como fonte de estudo é permitido dentro do processo editorial; o pacote distribui apenas texto autoral e links para as fontes.
+- O formato de pacote permite que a comunidade crie trilhas para diferentes linguagens de programação sem alterar o núcleo do app. Cada pacote declara a linguagem, as ferramentas para criar projetos, os comandos de verificação, os tipos de arquivo relevantes e o idioma do conteúdo; Cargo será um dos adaptadores, não uma suposição global do app.
+- Na v1, a pessoa poderá importar pacotes a partir de uma pasta ou arquivo local; um catálogo remoto fica para depois. O primeiro pacote oficial será a trilha de Rust em português do Brasil.
+- A interface da aplicação terá localizações pt-BR e en desde a v1, com escolha manual e uma opção baseada no idioma do sistema. O pacote de Rust v1 inclui conteúdo pt-BR; traduções de lições são conteúdo separado e não são geradas automaticamente.
+- As lições autorais serão escritas no idioma declarado pelo pacote. O pacote Rust inicial terá conteúdo em pt-BR. Usar documentação como fonte de estudo é permitido dentro do processo editorial; o pacote distribui apenas texto autoral e links para as fontes.
 - roadmap.sh servirá como referência de pesquisa e poderá aparecer como link externo. Não baixar, raspar, copiar, traduzir, adaptar ou incluir conteúdo ou estruturas do site/repositório sem permissão escrita compatível com redistribuição.
 
 ## Integração com IA
@@ -102,7 +104,7 @@ Para organização dos exercícios, foi considerada a agregação por etapa em u
 ## Restrições e premissas
 
 - Primeira plataforma: Windows 10/11 x64, distribuído por instalador. macOS e Linux ficam para depois.
-- Rust é a única trilha oficial incluída na versão inicial.
+- A interface precisa suportar pt-BR e inglês desde a v1, mas a primeira trilha completa será somente pt-BR.
 - É necessário ter Rust stable/Cargo instalado para gerar e verificar os projetos; o app orienta a instalação e detecta a ferramenta.
 - A integração de uso do plano ChatGPT para apps open source é uma dependência externa sujeita a elegibilidade, quotas, capacidades e alterações de política. O formato dos pacotes e o núcleo de aprendizagem devem continuar úteis sem IA.
 - A licença do app e dos pacotes autorais deve permitir uso, alteração e redistribuição open source; dependências e conteúdo de terceiros devem ser revisados separadamente.
@@ -115,6 +117,7 @@ Para organização dos exercícios, foi considerada a agregação por etapa em u
 - A revisão só ocorre mediante solicitação e usa apenas os arquivos escolhidos e resultados de verificações autorizadas.
 - A IA explica e sugere sem modificar o conteúdo local.
 - Um novo pacote de trilha pode ser instalado sem mudar o núcleo da aplicação.
+- A pessoa pode usar a interface em pt-BR ou inglês; a aplicação identifica claramente o idioma do conteúdo da trilha selecionada.
 - O pacote Rust não incorpora conteúdo protegido do roadmap.sh.
 
 ## Decisões deixadas para a implementação
